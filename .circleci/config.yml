@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  deploy:
+    docker:
+      - image: cimg/node:20.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Install Vercel CLI locally
+          command: npm install vercel
+      - run:
+          name: Build project
+          command: npm run build
+      - run:
+          name: Deploy to Vercel
+          command: |
+            pnpm install --no-frozen-lockfile
+            pnpm run build
+            pnpm vercel deploy --prebuilt --yes --token $VERCEL_TOKEN \
+              --env NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY} \
+              --env NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+
+workflows:
+  deploy:
+    jobs:
+      - deploy
