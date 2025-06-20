@@ -20,6 +20,7 @@ jobs:
           command: |
             pnpm install --no-frozen-lockfile
             pnpm run build
+            pnpm vercel login
             pnpm vercel build link --yes --token $VERCEL_TOKEN
             pnpm vercel deploy --prebuilt --yes --token $VERCEL_TOKEN \
               --env NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY} \
